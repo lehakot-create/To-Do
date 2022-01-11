@@ -1,0 +1,19 @@
+{% extends 'template.html' %}
+
+{% block title %}
+{% endblock title %}
+
+
+{% block content %}
+<p>title {{ task.title }}</p>
+<p>text: {{ task.text }}</p>
+<p>date_time_start: {{ task.date_time_start }}</p>
+<p>date_time_finish: {{ task.date_time_finish }}</p>
+<p>category: {{ task.category }}</p>
+<p>slug: {{ task.slug }}</p>
+<p>executor: {{ task.executor }}</p>
+<p>priority: {{ task.priority }}</p>
+<p>reminder: {{ task.reminder }}</p>
+<p>control: {{ task.status }}</p>
+
+{% endblock content %}
