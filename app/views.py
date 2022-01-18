@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
-from .models import Task
+from .models import Task, SubTask, Category
 from django.urls import reverse_lazy
-from .forms import TaskForm, UserForm
+from .forms import TaskForm, UserForm, SubTaskForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 class TaskListView(ListView):
     model = Task
     template_name = 'task_list.html'
+    # template_name = 'index.html'
     context_object_name = 'task'
     ordering = ['-priority']
 
@@ -34,6 +35,8 @@ class TaskListView(ListView):
             filter(date_finish=None).order_by('-priority')
 
         context['completed'] = Task.objects.filter(executor_id=self.request.user.id, status='CO')
+
+        context['subtask'] = SubTask.objects.filter(executor=self.request.user.id)
 
         return context
 
@@ -62,6 +65,10 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('task_list')
     form_class = TaskForm
 
+    def form_valid(self, form):
+        form.instance.executor = self.request.user
+        return super(TaskCreateView, self).form_valid(form)
+
 
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
@@ -73,10 +80,10 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
 @login_required
 def task_complete(request, pk):
     t = Task.objects.get(id=pk)
+    t.date_finish = datetime.today().date()
+    t.time_finish = datetime.today().time()
     t.status = 'CO'
     t.save()
-    print(Task.objects.get(id=pk).status)
-    # t.save()
     return redirect('task_list')
 
 
@@ -90,3 +97,20 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['user'] = User.objects.get(id=self.kwargs.get('pk'))
         return context
+
+
+class SubTaskCreateView(LoginRequiredMixin, CreateView):
+    model = SubTask
+    template_name = 'task_edit.html'
+    success_url = reverse_lazy('task_list')
+    form_class = SubTaskForm
+    initial = {'title': 'title', 'text': 'text'}
+
+    def form_valid(self, form, **kwargs):
+        id = self.kwargs.get('pk')
+
+        form.instance.id_task = Task.objects.get(id=id)
+        form.instance.category = Task.objects.get(id=id).category
+        form.instance.executor = Task.objects.get(id=id).executor
+        form.instance.priority = Task.objects.get(id=id).priority
+        return super(SubTaskCreateView, self).form_valid(form)

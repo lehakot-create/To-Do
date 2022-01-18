@@ -45,10 +45,10 @@ class Task(models.Model):
     date_time_start = models.DateTimeField(auto_now_add=True)
     date_finish = models.DateField(blank=True, null=True)
     time_finish = models.TimeField(blank=True, null=True)
-    category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, default='Общая')
     slug = models.SlugField(blank=True)
     executor = models.ForeignKey(User, on_delete=models.CASCADE)
-    priority = models.ForeignKey('Priority', on_delete=models.CASCADE)
+    priority = models.ForeignKey('Priority', on_delete=models.CASCADE, default='Normal')
     reminder = models.DateTimeField(blank=True, null=True)
 
     performed = 'PE'
@@ -81,9 +81,16 @@ class SubTask(models.Model):
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     slug = models.SlugField(blank=True)
     executor = models.ForeignKey(User, on_delete=models.CASCADE)
-    priority = models.ForeignKey('Priority', on_delete=models.CASCADE)
+    priority = models.ForeignKey('Priority', on_delete=models.CASCADE, default='Normal')
     reminder = models.DateTimeField(blank=True, null=True)
-    control = models.ForeignKey('Control', on_delete=models.CASCADE)
+    # control = models.ForeignKey('Control', on_delete=models.CASCADE)
+    performed = 'PE'
+    complete = 'CO'
+    choice = [
+        (performed, 'Выполняется'),
+        (complete, 'Выполнено'),
+    ]
+    status = models.CharField(max_length=11, choices=choice, default=performed)
 
     class Meta:
         verbose_name = 'Подзадача'
@@ -91,6 +98,10 @@ class SubTask(models.Model):
 
     def __str__(self):
         return f'{self.executor}: {self.title}'
+
+    def save(self, *args, **kwargs):
+        self.slug = slug_name(self.title)
+        super().save(*args, **kwargs)
 
 
 class Category(models.Model):
@@ -102,7 +113,6 @@ class Category(models.Model):
 
     def __str__(self):
         return f'{self.name}'
-
 
 class Priority(models.Model):
     low = 'Low'
