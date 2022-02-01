@@ -1,21 +1,14 @@
-python manage.py shell
+Описание проекта To-Do from Alex
 
-from app.models import *
+1. Создавать задачи, устанавливать срок, важность
+2. Есть возможность создавать подзадачи
+3. Регистрация как на сайте, так и через Google-акаунт
 
-Category.objects.create(name='Общая')
-Category.objects.create(name='Рабочая')
 
-User.objects.create(username='Mike')
-User.objects.create(username='Ivan')
 
-Priority.objects.create()
-Priority.objects.create(name='Low')
-Priority.objects.create(name='High')
-
-Control.objects.create(user=User.objects.get(id=7))
-
-Task.objects.create(title='Финансирование Купцова', category=Category.objects.get(id=2), executor=User.objects.get(id=7), priority=Priority.objects.get(id=3))
-Task.objects.create(title='Финансирование Бочаров', category=Category.objects.get(id=2), executor=User.objects.get(id=7), priority=Priority.objects.get(id=1))
-Task.objects.create(title='Закупка', category=Category.objects.get(id=2), executor=User.objects.get(id=7), priority=Priority.objects.get(id=1))
-Task.objects.create(title='Задача', category=Category.objects.get(id=2), executor=User.objects.get(id=7), priority=Priority.objects.get(id=1))
-Task.objects.create(title='Оплатить взнос', text='Оплатить взнос в Мастерскую Талантов за Мишу', category=Category.objects.get(id=2), executor=User.objects.get(id=7), priority=Priority.objects.get(id=1))
+Будущие возможности
+1. При выполнении задачи в срок начислять рейтинг, при просрачивании задачи снимать
+2. В подзадачах добавить кнопки complete, edit, delete
+3. Реализовать возмоность копирования задачи
+4. Прогресс выполнения задачи, если есть подзадачи
+5. 

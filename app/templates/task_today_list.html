@@ -2,24 +2,16 @@
 
 {% block title %}To-Do{% endblock title %}
 
-<!--{% block navigation %}
-    <li class="nav-item"><a class="nav-link" href="{% url 'task_create' %}">New Task</a></li>
-{% endblock navigation %}-->
-
 
 {% block content %}
-{% if not perform_today %}
-<a href="{% url 'task_create' %}">Создать новую задачу</a>
-{% endif %}
 
-
-{% if perform_today|length %}
-{% for t in perform_today %}
+{% if perform_today_list|length %}
+{% for t in perform_today_list %}
 <div class="accordion mb-2" id="accordion_perform_today">
     <div class="accordion-item">
         <h2 class="accordion-header" id="heading{{ t.id }}">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ t.id }}" aria-expanded="true" aria-controls="collapse{{ t.id }}">
-                Приоритет: {{ t.priority }} - {{ t.title }}
+                Приоритет: {{ t.priority }} - {{ t.title }} - {{ t.category }}
             </button>
         </h2>
         <div id="collapse{{ t.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ t.id }}" data-bs-parent="#accordion_perform_today">

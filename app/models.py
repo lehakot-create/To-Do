@@ -114,6 +114,7 @@ class Category(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+
 class Priority(models.Model):
     low = 'Low'
     normal = 'Normal'

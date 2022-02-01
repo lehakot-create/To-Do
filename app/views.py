@@ -7,6 +7,7 @@ from .forms import TaskForm, UserForm, SubTaskForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Count
 
 
 class TaskListView(ListView):
@@ -20,24 +21,240 @@ class TaskListView(ListView):
         context = super().get_context_data(*args, **kwargs)
         # print(self.request.user.id)
 
-        context['perform_yesterday'] = Task.objects.filter(executor_id=self.request.user.id, status='PE')\
-            .filter(date_finish__lt=datetime.today().date()).order_by('-priority', 'date_finish', 'time_finish')
+        context['perform_yesterday'] = Task.objects.filter(executor_id=self.request.user.id,
+                                                           status='PE').filter(date_finish__lt=datetime.today().date())\
+                                                            .order_by('-priority', 'date_finish', 'time_finish').count()
+
+        context['perform_yesterday_categories'] = Category.objects.filter(task__status='PE',
+                                                                          task__executor_id=self.request.user.id,
+                                                                          task__date_finish__lt=datetime.today().date())\
+                                                                            .annotate(Count('task'))
 
         context['perform_today'] = Task.objects.filter(executor_id=self.request.user.id, status='PE'). \
             filter(date_finish=datetime.today().date()).order_by('-priority')
 
+        context['perform_today_categories'] = Category.objects.filter(task__status='PE',
+                                                                      task__executor_id=self.request.user.id,
+                                                                      task__date_finish=datetime.today().date())\
+                                                                    .annotate(Count('task'))
+
         # context['perform'] = Task.objects.filter(id=self.request.user.id, status='PE').order_by('-priority')
 
         context['perform_tomorrow'] = Task.objects.filter(executor_id=self.request.user.id, status='PE')\
+            .filter(date_finish=datetime.today().date() + timedelta(days=1)).order_by('-priority').count()
+
+        context['perform_tomorrow_categories'] = Category.objects.filter(task__status='PE', task__executor_id=self.request.user.id, task__date_finish=datetime.today().date() + timedelta(days=1)).annotate(Count('task'))
+
+        # context['perform_not_date'] = Task.objects.filter(executor_id=self.request.user.id, status='PE'). \
+        #     filter(date_finish=None).order_by('-priority')
+
+        context['completed'] = Task.objects.filter(executor_id=self.request.user.id, status='CO').count()
+
+        context['completed_categories'] = Category.objects.filter(task__status='CO', task__executor_id=self.request.user.id).annotate(Count('task'))
+
+        # context['subtask'] = SubTask.objects.filter(executor=self.request.user.id)
+
+        context['completed_today'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date()).count()
+        context['completed_yesterday'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date() - timedelta(days=1)).count()
+
+        return context
+
+
+class TaskYesterdayListView(ListView):
+    model = Task
+    template_name = 'task_yesterday_list.html'
+    # template_name = 'index.html'
+    context_object_name = 'task'
+    ordering = ['-priority']
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['perform_yesterday'] = Task.objects.filter(executor_id=self.request.user.id,
+                                                           status='PE').filter(date_finish__lt=datetime.today().date())\
+                                                            .order_by('-priority', 'date_finish', 'time_finish').count()
+
+        context['perform_yesterday_categories'] = Category.objects.filter(task__status='PE',
+                                                                          task__executor_id=self.request.user.id,
+                                                                          task__date_finish__lt=datetime.today().date())\
+                                                                            .annotate(Count('task'))
+
+        context['perform_today'] = Task.objects.filter(executor_id=self.request.user.id, status='PE'). \
+            filter(date_finish=datetime.today().date()).order_by('-priority')
+
+        context['perform_today_categories'] = Category.objects.filter(task__status='PE',
+                                                                      task__executor_id=self.request.user.id,
+                                                                      task__date_finish=datetime.today().date())\
+                                                                    .annotate(Count('task'))
+
+        context['perform_tomorrow'] = Task.objects.filter(executor_id=self.request.user.id, status='PE')\
+            .filter(date_finish=datetime.today().date() + timedelta(days=1)).order_by('-priority').count()
+
+        context['perform_tomorrow_categories'] = Category.objects.filter(task__status='PE',
+                                                                         task__executor_id=self.request.user.id,
+                                                                         task__date_finish=datetime.today().date() + timedelta(days=1))\
+                                                                        .annotate(Count('task'))
+
+        context['completed'] = Task.objects.filter(executor_id=self.request.user.id, status='CO').count()
+
+        context['completed_categories'] = Category.objects.filter(task__status='CO', task__executor_id=self.request.user.id).annotate(Count('task'))
+
+        context['completed_today'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date()).count()
+        context['completed_yesterday'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date() - timedelta(days=1)).count()
+
+        context['perform_yesterday_list'] = Task.objects.filter(executor_id=self.request.user.id,
+                                                          status='PE',
+                                                          category_id=self.kwargs.get('pk')) \
+            .filter(date_finish__lte=datetime.today().date() - timedelta(days=1)).order_by('-priority')
+
+        return context
+
+
+class TaskTodayListView(ListView):
+    model = Task
+    template_name = 'task_today_list.html'
+    # template_name = 'index.html'
+    context_object_name = 'task'
+    ordering = ['-priority']
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['perform_yesterday'] = Task.objects.filter(executor_id=self.request.user.id,
+                                                           status='PE').filter(date_finish__lt=datetime.today().date())\
+                                                            .order_by('-priority', 'date_finish', 'time_finish').count()
+
+        context['perform_yesterday_categories'] = Category.objects.filter(task__status='PE',
+                                                                          task__executor_id=self.request.user.id,
+                                                                          task__date_finish__lt=datetime.today().date())\
+                                                                            .annotate(Count('task'))
+
+        context['perform_today'] = Task.objects.filter(executor_id=self.request.user.id, status='PE'). \
+            filter(date_finish=datetime.today().date()).order_by('-priority')
+
+        context['perform_today_categories'] = Category.objects.filter(task__status='PE',
+                                                                      task__executor_id=self.request.user.id,
+                                                                      task__date_finish=datetime.today().date())\
+                                                                    .annotate(Count('task'))
+
+        context['perform_tomorrow'] = Task.objects.filter(executor_id=self.request.user.id, status='PE')\
+            .filter(date_finish=datetime.today().date() + timedelta(days=1)).order_by('-priority').count()
+
+        context['perform_tomorrow_categories'] = Category.objects.filter(task__status='PE',
+                                                                         task__executor_id=self.request.user.id,
+                                                                         task__date_finish=datetime.today().date() + timedelta(days=1))\
+                                                                        .annotate(Count('task'))
+
+        context['completed'] = Task.objects.filter(executor_id=self.request.user.id, status='CO').count()
+
+        context['completed_categories'] = Category.objects.filter(task__status='CO', task__executor_id=self.request.user.id).annotate(Count('task'))
+
+        context['completed_today'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date()).count()
+        context['completed_yesterday'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date() - timedelta(days=1)).count()
+
+        context['perform_today_list'] = Task.objects.filter(executor_id=self.request.user.id,
+                                                          status='PE',
+                                                          category_id=self.kwargs.get('pk')) \
+            .filter(date_finish=datetime.today().date()).order_by('-priority')
+
+        return context
+
+
+class TaskTomorrowListView(ListView):
+    model = Task
+    template_name = 'task_tomorrow_list.html'
+    # template_name = 'index.html'
+    context_object_name = 'task'
+    ordering = ['-priority']
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['perform_yesterday'] = Task.objects.filter(executor_id=self.request.user.id,
+                                                           status='PE').filter(date_finish__lt=datetime.today().date())\
+                                                            .order_by('-priority', 'date_finish', 'time_finish').count()
+
+        context['perform_yesterday_categories'] = Category.objects.filter(task__status='PE',
+                                                                          task__executor_id=self.request.user.id,
+                                                                          task__date_finish__lt=datetime.today().date())\
+                                                                            .annotate(Count('task'))
+
+        context['perform_today'] = Task.objects.filter(executor_id=self.request.user.id, status='PE'). \
+            filter(date_finish=datetime.today().date()).order_by('-priority')
+
+        context['perform_today_categories'] = Category.objects.filter(task__status='PE',
+                                                                      task__executor_id=self.request.user.id,
+                                                                      task__date_finish=datetime.today().date())\
+                                                                    .annotate(Count('task'))
+
+        context['perform_tomorrow'] = Task.objects.filter(executor_id=self.request.user.id, status='PE')\
+            .filter(date_finish=datetime.today().date() + timedelta(days=1)).order_by('-priority').count()
+
+        context['perform_tomorrow_categories'] = Category.objects.filter(task__status='PE',
+                                                                         task__executor_id=self.request.user.id,
+                                                                         task__date_finish=datetime.today().date() + timedelta(days=1))\
+                                                                        .annotate(Count('task'))
+
+        context['completed'] = Task.objects.filter(executor_id=self.request.user.id, status='CO').count()
+
+        context['completed_categories'] = Category.objects.filter(task__status='CO', task__executor_id=self.request.user.id).annotate(Count('task'))
+
+        context['completed_today'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date()).count()
+        context['completed_yesterday'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date() - timedelta(days=1)).count()
+
+        context['perform_tomorrow_list'] = Task.objects.filter(executor_id=self.request.user.id,
+                                                          status='PE',
+                                                          category_id=self.kwargs.get('pk')) \
             .filter(date_finish=datetime.today().date() + timedelta(days=1)).order_by('-priority')
 
-        context['perform_not_date'] = Task.objects.filter(executor_id=self.request.user.id, status='PE'). \
-            filter(date_finish=None).order_by('-priority')
+        return context
 
-        context['completed'] = Task.objects.filter(executor_id=self.request.user.id, status='CO')
 
-        context['subtask'] = SubTask.objects.filter(executor=self.request.user.id)
+class TaskCompleteListView(ListView):
+    model = Task
+    template_name = 'complete.html'
+    context_object_name = 'complete'
+    ordering = ['-date_finish', '-time_finish']
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['complete'] = Task.objects.filter(executor_id=self.request.user.id,
+                                                  status='CO',
+                                                  category_id=self.kwargs.get('pk'))
+
+        context['perform_yesterday'] = Task.objects.filter(executor_id=self.request.user.id, status='PE') \
+            .filter(date_finish__lt=datetime.today().date()).order_by('-priority', 'date_finish', 'time_finish').count()
+
+        context['perform_yesterday_categories'] = Category.objects.filter(task__status='PE',
+                                                                          task__executor_id=self.request.user.id,
+                                                                          task__date_finish__lt=datetime.today().date()).annotate(Count('task'))
+
+        context['perform_today'] = Task.objects.filter(executor_id=self.request.user.id, status='PE'). \
+            filter(date_finish=datetime.today().date()).order_by('-priority')
+
+        context['perform_today_categories'] = Category.objects.filter(task__status='PE',
+                                                                      task__executor_id=self.request.user.id,
+                                                                      task__date_finish=datetime.today().date()).annotate(Count('task'))
+
+        context['perform_tomorrow'] = Task.objects.filter(executor_id=self.request.user.id, status='PE') \
+            .filter(date_finish=datetime.today().date() + timedelta(days=1)).order_by('-priority').count()
+
+        context['perform_tomorrow_categories'] = Category.objects.filter(task__status='PE',
+                                                                         task__executor_id=self.request.user.id,
+                                                                         task__date_finish=datetime.today().date() + timedelta(
+                                                                             days=1)).annotate(Count('task'))
+
+        context['completed'] = Task.objects.filter(executor_id=self.request.user.id, status='CO').count()
+
+        context['completed_categories'] = Category.objects.filter(task__status='CO',
+                                                                  task__executor_id=self.request.user.id).annotate(Count('task'))
+
+
+        context['completed_today'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date()).count()
+
+        context['completed_yesterday'] = Task.objects.filter(executor_id=self.request.user.id, status='CO',
+                                                             date_finish=datetime.today().date() - timedelta(
+                                                                 days=1)).count()
         return context
 
 

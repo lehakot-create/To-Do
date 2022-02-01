@@ -1,0 +1,30 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+{% if complete|length %}
+{% for t in complete %}
+
+<div class="accordion" id="accordion_complete">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="heading{{ t.id }}">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ t.id }}" aria-expanded="true" aria-controls="collapse{{ t.id }}">
+                Приоритет: {{ t.priority }} - {{ t.category }} - {{ t.title }}
+            </button>
+        </h2>
+        <div id="collapse{{ t.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ t.id }}" data-bs-parent="#accordion_complete">
+            <div class="accordion-body">
+                Описание: {{ t.text }}<br>
+                Задача выполнена: {{ t.date_finish|date:'d.m.Y' }}  {{ t.time_finish|time:'H:i' }}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endfor %}
+{% endif %}
+
+
+
+{% endblock content %}
