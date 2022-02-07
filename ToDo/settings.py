@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-x2m%!)zwrr2*0ncp8*mt5o+#_ih#o&#$*_*#t7y6**m+cte_bf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -127,7 +128,8 @@ STATIC_URL = 'static/'
 # STATICFILES_DIRS = [
 #     BASE_DIR / 'static',
 # ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
@@ -155,3 +157,6 @@ LOGIN_REDIRECT_URL = '/'
 
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
