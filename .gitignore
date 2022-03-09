@@ -1,2 +1,5 @@
 */__pycache__/
 **/__pycache__/
+/db — копия.sqlite3
+.idea/
+/venv/

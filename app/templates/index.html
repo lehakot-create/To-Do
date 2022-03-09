@@ -102,6 +102,16 @@
 
 <main>
 
+<!--<p>-->
+<!--  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">-->
+<!--    Переключить ширину сворачиваемого-->
+<!--  </button>-->
+<!--</p>-->
+<div style="min-height: 120px;">
+  <div class="collapse.show collapse-horizontal" id="collapseWidthExample">
+<!--    <div class="card card-body" style="width: 300px;">-->
+<!--      Это некий заполнитель для горизонтального сворачивания. По умолчанию он скрыт и отображается при срабатывании.-->
+<!--    </div>-->
 
   <!--<div class="b-example-divider"></div>-->
 
@@ -199,53 +209,32 @@
   Вчера вы закрыли задач: {{ completed_yesterday }}
   </div>
 
-  <div class="b-example-divider"></div>
+
+  </div>
+</div>
+
+  <div class="b-example-divider" role="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-controls="collapseWidthExample"></div>
 
 
+<div class="container my-3">
+  <div class="row">
+    <div class="col">
+      <a href="{% url 'task_create' %}" class="btn btn-secondary">+</a>
+    </div>
+    <div class="col">
+      <ul>
+        <li>
+          {% block content %}
 
-<a href="{% url 'task_create' %}">Создайте задачу</a>
+          {% endblock content %}
+        </li>
+      </ul>
 
-<!--{% if not perform_yesterday and not perform_today and not perform_tomorrow and not completed %}
-Создайте свою первую <a href="{% url 'task_create' %}">задачу</a>
-{% endif %}
-
-
-
-                    {% if perform_today|length %}
-                    {% for t in perform_today %}
-                    <div class="accordion mb-2" id="accordion_perform_today">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading{{ t.id }}">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ t.id }}" aria-expanded="true" aria-controls="collapse{{ t.id }}">
-                                    Приоритет: {{ t.priority }} - {{ t.title }}
-                                </button>
-                            </h2>
-                            <div id="collapse{{ t.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ t.id }}" data-bs-parent="#accordion_perform_today">
-                                <div class="accordion-body">
-                                    Описание: {{ t.text }}<br>
-                                    Срок: {{ t.date_finish|date:'d.m.Y' }}  {{ t.time_finish|time:'H:i' }}  <br>
-                                    <a class="btn btn-primary" href="{% url 'subtask_create' t.id %}" role="button">+</a>
-                                    <a class="btn btn-primary" href="{% url 'complete' t.id %}" role="button">Complete</a>
-                                    <a class="btn btn-primary" href="{% url 'task_edit' t.id %}" role="button">Edit</a>
-                                    <a class="btn btn-primary" href="{% url 'task_delete' t.id %}" role="button">Delete</a>
-                                    {% for st in t.subtask_set.all %}
-                                    <br>{{ st }}
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    {% endif %}-->
-
-
-<ul>
-  <li>
-{% block content %}
-
-{% endblock content %}
-  </li>
-</ul>
+    </div>
+    <div class="col">
+          One of three columns
+    </div>
+  </div>
 
 </main>
 
