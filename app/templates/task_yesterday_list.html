@@ -15,17 +15,50 @@
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ t.id }}" aria-expanded="true" aria-controls="collapse{{ t.id }}">
                 Приоритет: {{ t.priority }} - {{ t.title }} - {{ t.category }}
             </button>
+            <div class="progress">
+                <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+            </div>
         </h2>
         <div id="collapse{{ t.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ t.id }}" data-bs-parent="#accordion_perform_today">
             <div class="accordion-body">
-                Описание: {{ t.text }}<br>
-                Срок: {{ t.date_finish|date:'d.m.Y' }}  {{ t.time_finish|time:'H:i' }}  <br>
-                <a class="btn btn-primary" href="{% url 'subtask_create' t.id %}" role="button">+</a>
-                <a class="btn btn-primary" href="{% url 'complete' t.id %}" role="button">Complete</a>
-                <a class="btn btn-primary" href="{% url 'task_edit' t.id %}" role="button">Edit</a>
-                <a class="btn btn-primary" href="{% url 'task_delete' t.id %}" role="button">Delete</a>
+                <div class="row">
+                    <div class="col">
+                        Срок: {{ t.date_finish|date:'d.m.Y' }}  {{ t.time_finish|time:'H:i' }}
+                    </div>
+                    <div class="col col-md-auto">
+
+                        <a class="btn-sm btn-secondary" href="{% url 'complete' t.id %}" role="button">Complete</a>
+                        <a class="btn-sm btn-secondary" href="{% url 'task_edit' t.id %}" role="button">Edit</a>
+                        <a class="btn-sm btn-secondary" href="{% url 'task_delete' t.id %}" role="button">Delete</a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row-cols-1">
+                    Описание: {{ t.text }}
+                </div>
+                <hr>
+                <div class="row mb-2">
+                    <div class="col-2">
+                        <strong>Подзадачи</strong>
+                    </div>
+                    <div class="col-1">
+                        <a class="btn-sm btn-secondary" href="{% url 'subtask_create' t.id %}" role="button">+</a>
+                    </div>
+                </div>
                 {% for st in t.subtask_set.all %}
-                <br>{{ st }}
+                    <div class="row mb-2">
+                        <div class="col-1">
+
+                        </div>
+                        <div class="col">
+                                {{ st }}
+                        </div>
+                        <div class="col text-end">
+                            <a class="btn-sm btn-secondary" href="#" role="button">Complete</a>
+                            <a class="btn-sm btn-secondary" href="#" role="button">Edit</a>
+                            <a class="btn-sm btn-secondary" href="#" role="button">Delete</a>
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
         </div>

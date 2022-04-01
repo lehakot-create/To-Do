@@ -218,24 +218,29 @@
 
 <div class="container my-3">
   <div class="row">
-    <div class="col">
-      <a href="{% url 'task_create' %}" class="btn btn-secondary">+</a>
-    </div>
-    <div class="col">
-      <ul>
-        <li>
-          {% block content %}
+      <div class="col-1 mb-4">
+          <a href="{% url 'task_create' %}" class="btn btn-secondary">+</a>
 
-          {% endblock content %}
-        </li>
-      </ul>
-
-    </div>
-    <div class="col">
-          One of three columns
-    </div>
+      </div>
+      <div class="col-4">
+          <a href="">Перенести просроченные</a>
+      </div>
   </div>
+    <div class="row">
+        <div class="col-8">
+            <ul>
+                <li>
+                    {% block content %}
 
+                    {% endblock content %}
+                </li>
+            </ul>
+        </div>
+{#        <div class="col border-dark">#}
+{#            One of three columns#}
+{#        </div>#}
+    </div>
+</div>
 </main>
 
 
