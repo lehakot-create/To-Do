@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import *
 
 
@@ -7,7 +8,6 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Task, ItemAdmin)
-# admin.site.register(Task)
 admin.site.register(SubTask)
 admin.site.register(Category)
 admin.site.register(Priority)

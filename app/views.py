@@ -19,7 +19,6 @@ class TaskListView(ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        # print(self.request.user.id)
 
         context['perform_yesterday'] = Task.objects.filter(executor_id=self.request.user.id,
                                                            status='PE').filter(date_finish__lt=datetime.today().date())\
@@ -38,21 +37,14 @@ class TaskListView(ListView):
                                                                       task__date_finish=datetime.today().date())\
                                                                     .annotate(Count('task'))
 
-        # context['perform'] = Task.objects.filter(id=self.request.user.id, status='PE').order_by('-priority')
-
         context['perform_tomorrow'] = Task.objects.filter(executor_id=self.request.user.id, status='PE')\
             .filter(date_finish=datetime.today().date() + timedelta(days=1)).order_by('-priority').count()
 
         context['perform_tomorrow_categories'] = Category.objects.filter(task__status='PE', task__executor_id=self.request.user.id, task__date_finish=datetime.today().date() + timedelta(days=1)).annotate(Count('task'))
 
-        # context['perform_not_date'] = Task.objects.filter(executor_id=self.request.user.id, status='PE'). \
-        #     filter(date_finish=None).order_by('-priority')
-
         context['completed'] = Task.objects.filter(executor_id=self.request.user.id, status='CO').count()
 
         context['completed_categories'] = Category.objects.filter(task__status='CO', task__executor_id=self.request.user.id).annotate(Count('task'))
-
-        # context['subtask'] = SubTask.objects.filter(executor=self.request.user.id)
 
         context['completed_today'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date()).count()
         context['completed_yesterday'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date() - timedelta(days=1)).count()
@@ -331,3 +323,31 @@ class SubTaskCreateView(LoginRequiredMixin, CreateView):
         form.instance.executor = Task.objects.get(id=id).executor
         form.instance.priority = Task.objects.get(id=id).priority
         return super(SubTaskCreateView, self).form_valid(form)
+
+
+class SubTaskUpdateView(LoginRequiredMixin, UpdateView):
+    model = SubTask
+    template_name = 'task_edit.html'
+    success_url = reverse_lazy('task_list')
+    form_class = SubTaskForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['task'] = SubTask.objects.get(id=self.kwargs.get('pk'))
+        return context
+
+
+class SubTaskDeleteView(LoginRequiredMixin, DeleteView):
+    model = SubTask
+    template_name = 'task_delete.html'
+    success_url = reverse_lazy('task_list')
+
+
+@login_required
+def subtask_complete(request, pk):
+    subtask = SubTask.objects.get(id=pk)
+    subtask.date_finish = datetime.today().date()
+    subtask.time_finish = datetime.today().time()
+    subtask.status = 'CO'
+    subtask.save()
+    return redirect('task_list')

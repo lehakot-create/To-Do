@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     {% load static %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,12 +10,12 @@
     <meta name="generator" content="Hugo 0.88.1">
     <title>ToDo from Alex</title>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sidebars/">
+      <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sidebars/">
 
     
 
     <!-- Bootstrap core CSS -->
-<link href="{% static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+      <link href="{% static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
 
     <style>
       .bd-placeholder-img {
@@ -31,16 +32,11 @@
         }
       }
     </style>
-
-    
     <!-- Custom styles for this template -->
     <link href="{% static 'sidebar/sidebars.css' %}" rel="stylesheet">
-  </head>
-  <body>
+</head>
 
-
-
-    
+<body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="bootstrap" viewBox="0 0 118 94">
     <title>Bootstrap</title>
@@ -107,140 +103,129 @@
 <!--    Переключить ширину сворачиваемого-->
 <!--  </button>-->
 <!--</p>-->
-<div style="min-height: 120px;">
-  <div class="collapse.show collapse-horizontal" id="collapseWidthExample">
+    <div style="min-height: 120px;">
+        <div class="collapse.show collapse-horizontal" id="collapseWidthExample">
 <!--    <div class="card card-body" style="width: 300px;">-->
 <!--      Это некий заполнитель для горизонтального сворачивания. По умолчанию он скрыт и отображается при срабатывании.-->
 <!--    </div>-->
 
   <!--<div class="b-example-divider"></div>-->
-
-  <div class="flex-shrink-0 p-3 bg-white" style="width: 280px;">
-    <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
-      <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
-      <span class="fs-5 fw-semibold">ToDo from Alex</span>
-    </a>
-
-    <ul class="list-unstyled ps-0">
-      <li class="mb-1">
-        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-          Просроченные {{ perform_yesterday }}
-        </button>
-        <div class="collapse show" id="home-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              {% for category in perform_yesterday_categories %}
-              <li><a href="{% url 'yesterday_list' category.id %}" class="link-dark rounded">{{ category.name }} {{ category.task__count }}</a></li>
-              {% endfor %}
-
-          </ul>
+            <div class="flex-shrink-0 p-3 bg-white" style="width: 280px;">
+                <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+                    <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
+                    <span class="fs-5 fw-semibold">ToDo from Alex</span>
+                </a>
+                <ul class="list-unstyled ps-0">
+                    <li class="mb-1">
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                            Просроченные {{ perform_yesterday }}
+                        </button>
+                        <div class="collapse show" id="home-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                {% for category in perform_yesterday_categories %}
+                                    <li><a href="{% url 'yesterday_list' category.id %}" class="link-dark rounded">{{ category.name }} {{ category.task__count }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#perform-collapse" aria-expanded="false">
+                            Текущие задачи {{ perform_today|length }}
+                        </button>
+                        <div class="collapse" id="perform-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                {% for category in perform_today_categories %}
+                                    <li><a href="{% url 'today_list' category.id %}" class="link-dark rounded">{{ category.name }} {{ category.task__count }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                            Задачи на завтра {{ perform_tomorrow }}
+                        </button>
+                        <div class="collapse" id="dashboard-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                {% for category in perform_tomorrow_categories %}
+                                    <li><a href="{% url 'tomorrow_list' category.id %}" class="link-dark rounded">{{ category.name }} {{ category.task__count }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#complete-collapse" aria-expanded="false">
+                            Выполненные {{ completed }}
+                        </button>
+                        <div class="collapse" id="complete-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                {% for category in completed_categories %}
+                                    <li><a href="{% url 'complete_list' category.id %}" class="link-dark rounded">{{ category.name }} {{ category.task__count }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#notes-collapse" aria-expanded="false">
+                            Заметки
+                        </button>
+                        <div class="collapse" id="notes-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#" class="link-dark rounded">New</a></li>
+                                <li><a href="#" class="link-dark rounded">Processed</a></li>
+                                <li><a href="#" class="link-dark rounded">Shipped</a></li>
+                                <li><a href="#" class="link-dark rounded">Returned</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="border-top my-3"></li>
+                    {% if user.is_authenticated %}
+                        <li class="mb-1">
+                            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                                Account: {{ user.username }}
+                            </button>
+                            <div class="collapse" id="account-collapse">
+                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    <li><a href="{% url 'profile' request.user.id %}" class="link-dark rounded">Profile</a></li>
+                                    <li><a href="#" class="link-dark rounded">Settings</a></li>
+                                    <li><a href="/accounts/logout/" class="link-dark rounded">Logout</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    {% else %}
+                        Вы вошли как Гость   <a href="/accounts/login/">Login</a>
+                    {% endif %}
+                </ul>
+                Сегодня вы закрыли задач: {{ completed_today }}<br>
+                Вчера вы закрыли задач: {{ completed_yesterday }}
+            </div>
         </div>
-      </li>
-      <li class="mb-1">
-        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#perform-collapse" aria-expanded="false">
-          Текущие задачи {{ perform_today|length }}
-        </button>
-        <div class="collapse" id="perform-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              {% for category in perform_today_categories %}
-            <li><a href="{% url 'today_list' category.id %}" class="link-dark rounded">{{ category.name }} {{ category.task__count }}</a></li>
-              {% endfor %}
-          </ul>
-        </div>
-      </li>
-        <li class="mb-1">
-        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-          Задачи на завтра {{ perform_tomorrow }}
-        </button>
-        <div class="collapse" id="dashboard-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              {% for category in perform_tomorrow_categories %}
-            <li><a href="{% url 'tomorrow_list' category.id %}" class="link-dark rounded">{{ category.name }} {{ category.task__count }}</a></li>
-              {% endfor %}
-          </ul>
-        </div>
-      </li>
-      <li class="mb-1">
-        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#complete-collapse" aria-expanded="false">
-            Выполненные {{ completed }}
-        </button>
-        <div class="collapse" id="complete-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              {% for category in completed_categories %}
-              <li><a href="{% url 'complete_list' category.id %}" class="link-dark rounded">{{ category.name }} {{ category.task__count }}</a></li>
-              {% endfor %}
-          </ul>
-        </div>
-      </li>
-        <li class="mb-1">
-            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#notes-collapse" aria-expanded="false">
-          Заметки
-        </button>
-        <div class="collapse" id="notes-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a href="#" class="link-dark rounded">New</a></li>
-            <li><a href="#" class="link-dark rounded">Processed</a></li>
-            <li><a href="#" class="link-dark rounded">Shipped</a></li>
-            <li><a href="#" class="link-dark rounded">Returned</a></li>
-          </ul>
-        </div>
-      </li>
-
-        <li class="border-top my-3"></li>
-        {% if user.is_authenticated %}
-
-      <li class="mb-1">
-        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-          Account: {{ user.username }}
-        </button>
-        <div class="collapse" id="account-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a href="{% url 'profile' request.user.id %}" class="link-dark rounded">Profile</a></li>
-            <li><a href="#" class="link-dark rounded">Settings</a></li>
-            <li><a href="/accounts/logout/" class="link-dark rounded">Logout</a></li>
-          </ul>
-        </div>
-      </li>
-        {% else %}
-        Вы вошли как Гость   <a href="/accounts/login/">Login</a>
-        {% endif %}
-    </ul>
-      <a class="nav-link" href="/admin/">Admin</a>
-          Сегодня вы закрыли задач: {{ completed_today }}<br>
-  Вчера вы закрыли задач: {{ completed_yesterday }}
-  </div>
-
-
-  </div>
-</div>
-
-  <div class="b-example-divider" role="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-controls="collapseWidthExample"></div>
-
-
-<div class="container my-3">
-  <div class="row">
-      <div class="col-1 mb-4">
-          <a href="{% url 'task_create' %}" class="btn btn-secondary">+</a>
-
-      </div>
-      <div class="col-4">
-          <a href="">Перенести просроченные</a>
-      </div>
-  </div>
-    <div class="row">
-        <div class="col-8">
-            <ul>
-                <li>
-                    {% block content %}
-
-                    {% endblock content %}
-                </li>
-            </ul>
-        </div>
-{#        <div class="col border-dark">#}
-{#            One of three columns#}
-{#        </div>#}
     </div>
-</div>
+
+
+    <div class="b-example-divider" role="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-controls="collapseWidthExample"></div>
+
+
+    <div class="container my-3">
+        <div class="row">
+            <div class="col-1 mb-4">
+                <a href="{% url 'task_create' %}" class="btn btn-secondary">+</a>
+            </div>
+            <div class="col-4">
+                <a href="">Перенести просроченные</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <ul>
+                    <li>
+                        {% block content %}
+
+                        {% endblock content %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </main>
 
 

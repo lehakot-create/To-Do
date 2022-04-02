@@ -1,7 +1,8 @@
 from django.forms import ModelForm, DateField, DateInput, TimeField, TimeInput
-from .models import Task, SubTask
 from django.contrib.auth.models import User
 from datetime import datetime
+
+from .models import Task, SubTask
 
 
 class TaskForm(ModelForm):
