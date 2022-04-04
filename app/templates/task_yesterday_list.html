@@ -24,9 +24,9 @@
                                     Срок: {{ t.date_finish|date:'d.m.Y' }}  {{ t.time_finish|time:'H:i' }}
                                 </div>
                                 <div class="col col-md-auto">
-                                    <a class="btn-sm btn-secondary" href="{% url 'complete' t.id %}" role="button">Complete</a>
-                                    <a class="btn-sm btn-secondary" href="{% url 'task_edit' t.id %}" role="button">Edit</a>
-                                    <a class="btn-sm btn-secondary" href="{% url 'task_delete' t.id %}" role="button">Delete</a>
+                                    <a class="btn btn-secondary btn-sm" href="{{% url 'complete' t.id %}" role="button">Complete</a>
+                                    <a class="btn btn-secondary btn-sm" href="{% url 'task_edit' t.id %}" role="button">Edit</a>
+                                    <a class="btn btn-secondary btn-sm" href="{% url 'task_delete' t.id %}" role="button">Delete</a>
                                 </div>
                             </div>
                             <hr>
@@ -39,7 +39,7 @@
                                     <strong>Подзадачи</strong>
                                 </div>
                                 <div class="col-1">
-                                    <a class="btn-sm btn-secondary" href="{% url 'subtask_create' t.id %}" role="button">+</a>
+                                    <a class=" btn btn-sm btn-secondary" href="{% url 'subtask_create' t.id %}" role="button">+</a>
                                 </div>
                             </div>
                             {% for st in t.subtask_set.all %}
@@ -55,9 +55,9 @@
                                     </div>
                                     {% if st.status == 'PE' %}
                                         <div class="col-4 text-end">
-                                            <a class="btn-sm btn-secondary" href="{% url 'subtask_complete' st.id %}" role="button">Complete</a>
-                                            <a class="btn-sm btn-secondary" href="{% url 'subtask_update' st.id %}" role="button">Edit</a>
-                                            <a class="btn-sm btn-secondary" href="{% url 'subtask_delete' st.id %}" role="button">Delete</a>
+                                            <a class="btn btn-sm btn-secondary" href="{% url 'subtask_complete' st.id %}" role="button">Complete</a>
+                                            <a class="btn btn-sm btn-secondary" href="{% url 'subtask_update' st.id %}" role="button">Edit</a>
+                                            <a class="btn btn-sm btn-secondary" href="{% url 'subtask_delete' st.id %}" role="button">Delete</a>
                                         </div>
                                     {% endif %}
                                 </div>

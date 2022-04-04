@@ -13,7 +13,6 @@ from django.db.models import Count
 class TaskListView(ListView):
     model = Task
     template_name = 'task_list.html'
-    # template_name = 'index.html'
     context_object_name = 'task'
     ordering = ['-priority']
 
@@ -55,7 +54,6 @@ class TaskListView(ListView):
 class TaskYesterdayListView(ListView):
     model = Task
     template_name = 'task_yesterday_list.html'
-    # template_name = 'index.html'
     context_object_name = 'task'
     ordering = ['-priority']
 
@@ -105,7 +103,6 @@ class TaskYesterdayListView(ListView):
 class TaskTodayListView(ListView):
     model = Task
     template_name = 'task_today_list.html'
-    # template_name = 'index.html'
     context_object_name = 'task'
     ordering = ['-priority']
 
@@ -155,7 +152,6 @@ class TaskTodayListView(ListView):
 class TaskTomorrowListView(ListView):
     model = Task
     template_name = 'task_tomorrow_list.html'
-    # template_name = 'index.html'
     context_object_name = 'task'
     ordering = ['-priority']
 
@@ -313,11 +309,9 @@ class SubTaskCreateView(LoginRequiredMixin, CreateView):
     template_name = 'task_edit.html'
     success_url = reverse_lazy('task_list')
     form_class = SubTaskForm
-    initial = {'title': 'title', 'text': 'text'}
 
     def form_valid(self, form, **kwargs):
         id = self.kwargs.get('pk')
-
         form.instance.id_task = Task.objects.get(id=id)
         form.instance.category = Task.objects.get(id=id).category
         form.instance.executor = Task.objects.get(id=id).executor
