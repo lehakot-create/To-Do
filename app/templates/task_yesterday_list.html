@@ -24,7 +24,7 @@
                                     Срок: {{ t.date_finish|date:'d.m.Y' }}  {{ t.time_finish|time:'H:i' }}
                                 </div>
                                 <div class="col col-md-auto">
-                                    <a class="btn btn-secondary btn-sm" href="{{% url 'complete' t.id %}" role="button">Complete</a>
+                                    <a class="btn btn-secondary btn-sm" href="{% url 'complete' t.id %}" role="button">Complete</a>
                                     <a class="btn btn-secondary btn-sm" href="{% url 'task_edit' t.id %}" role="button">Edit</a>
                                     <a class="btn btn-secondary btn-sm" href="{% url 'task_delete' t.id %}" role="button">Delete</a>
                                 </div>

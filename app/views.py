@@ -46,8 +46,14 @@ class TaskListView(ListView):
         context['completed_categories'] = Category.objects.filter(task__status='CO', task__executor_id=self.request.user.id).annotate(Count('task'))
 
         context['completed_today'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date()).count()
-        context['completed_yesterday'] = Task.objects.filter(executor_id=self.request.user.id, status='CO', date_finish=datetime.today().date() - timedelta(days=1)).count()
-
+        context['completed_yesterday'] = Task.objects.filter(executor_id=self.request.user.id, status='CO',
+                                                             date_finish=datetime.today().date() - timedelta(
+                                                                 days=1)).count()
+        context['completed_today_subtask'] = SubTask.objects.filter(executor_id=self.request.user.id, status='CO',
+                                                         date_finish=datetime.today().date()).count()
+        context['completed_yesterday_subtask'] = SubTask.objects.filter(executor_id=self.request.user.id, status='CO',
+                                                             date_finish=datetime.today().date() - timedelta(
+                                                                 days=1)).count()
         return context
 
 

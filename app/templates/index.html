@@ -198,8 +198,24 @@
                         Вы вошли как Гость   <a href="/accounts/login/">Login</a>
                     {% endif %}
                 </ul>
-                Сегодня вы закрыли задач: {{ completed_today }}<br>
-                Вчера вы закрыли задач: {{ completed_yesterday }}
+                <div class="row">
+                    Сегодня вы закрыли:
+                </div>
+                <div class="row text-end">
+                    <p> - задач: {{ completed_today }}</p>
+                </div>
+                <div class="row text-end">
+                    <p> - подзадач: {{ completed_today_subtask }}</p>
+                </div>
+                <div class="row">
+                    Вчера вы закрыли:
+                </div>
+                <div class="row text-end">
+                    <p> - задач: {{ completed_yesterday }}</p>
+                </div>
+                <div class="row text-end">
+                    <p> - подзадач: {{ completed_yesterday_subtask }}</p>
+                </div>
             </div>
         </div>
     </div>
