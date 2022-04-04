@@ -50,7 +50,7 @@
                                     <div class="col-3">
                                         {{ st.date_finish|date:'d.m.Y' }} {{ st.time_finish|time:'H:i' }}
                                     </div>
-                                    <div class="col">
+                                    <div class="col-4">
                                         {{ st.title }} - {{ st.text }} - {{ st.get_status_display }}
                                     </div>
                                     {% if st.status == 'PE' %}

@@ -2,29 +2,52 @@
 
 
 {% block content %}
-{% if complete|length %}
-{% for t in complete %}
+    {% if complete|length %}
+        {% for t in complete %}
+            <div class="accordion" id="accordion_complete">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ t.id }}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ t.id }}" aria-expanded="true" aria-controls="collapse{{ t.id }}">
+                            Приоритет: {{ t.priority }} - {{ t.category }} - {{ t.title }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ t.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ t.id }}" data-bs-parent="#accordion_complete">
+                        <div class="accordion-body">
+                            <div class="row-cols-1">
+                                Описание: {{ t.text }}
+                            </div>
+                            <div class="row-cols-1">
+                                Задача выполнена: {{ t.date_finish|date:'d.m.Y' }}  {{ t.time_finish|time:'H:i' }}
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-2">
+                                    <strong>Подзадачи</strong>
+                                </div>
+                            </div>
+                            {% for st in t.subtask_set.all %}
+                                <div class="row mb-2">
+                                    <div class="col-1">
 
-<div class="accordion" id="accordion_complete">
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="heading{{ t.id }}">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ t.id }}" aria-expanded="true" aria-controls="collapse{{ t.id }}">
-                Приоритет: {{ t.priority }} - {{ t.category }} - {{ t.title }}
-            </button>
-        </h2>
-        <div id="collapse{{ t.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ t.id }}" data-bs-parent="#accordion_complete">
-            <div class="accordion-body">
-                Описание: {{ t.text }}<br>
-                Задача выполнена: {{ t.date_finish|date:'d.m.Y' }}  {{ t.time_finish|time:'H:i' }}
+                                    </div>
+                                    <div class="col-3">
+                                        {{ st.date_finish|date:'d.m.Y' }} {{ st.time_finish|time:'H:i' }}
+                                    </div>
+                                    <div class="col-4">
+                                        {{ st.title }} - {{ st.text }} - {{ st.get_status_display }}
+                                    </div>
+                                    {% if st.status == 'PE' %}
+                                        <div class="col-4 text-end">
+                                            <a class="btn-sm btn-secondary" href="{% url 'subtask_complete' st.id %}" role="button">Complete</a>
+                                            <a class="btn-sm btn-secondary" href="{% url 'subtask_update' st.id %}" role="button">Edit</a>
+                                            <a class="btn-sm btn-secondary" href="{% url 'subtask_delete' st.id %}" role="button">Delete</a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-</div>
-
-{% endfor %}
-{% endif %}
-
-
-
+        {% endfor %}
+    {% endif %}
 {% endblock content %}
